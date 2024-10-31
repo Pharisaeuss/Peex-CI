@@ -70,3 +70,12 @@ jobs:
         url: ${{ secrets.SAMPLEWEBAPP_URL }}
         max-attempts: 2 
         retry-delay: 5s 
+
+    - name: Continue if Healthy
+      if: ${{ steps.health_check.outcome == 'success' }}
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ${{ secrets.SAMPLEWEBAPP_URL }} is Healthy
