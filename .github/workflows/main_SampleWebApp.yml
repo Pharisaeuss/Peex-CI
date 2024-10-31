@@ -71,8 +71,12 @@ jobs:
         echo "Status Code: $status_code"
         echo "{status_code}={$status_code}" >> $GITHUB_OUTPUT
 
+    - name: test
+      run: |
+        echo steps.health_check.outputs.status_code
+      
     - name: Continue if Healthy
-      if: ${{ steps.health_check.outputs.status_code == '200' }}
+      if: ${{ steps.health_check.outputs.status_code == 200 }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
