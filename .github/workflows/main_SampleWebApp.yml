@@ -74,12 +74,9 @@ jobs:
     - name: test
       run: |
         echo steps.health_check.outputs.status_code
-        echo ${{ steps.health_check.outputs.status_code }}
-        echo ${{ steps.health_check.outputs.status_code == 200 }}   
-        echo ${{ ${{ steps.health_check.outputs.status_code }} == 200 }}
         
     - name: Continue if Healthy
-      if: ${{ steps.health_check.outputs.status_code == 200 }}
+      if: ${{ ${{ steps.health_check.outputs.status_code }} == 200 }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
