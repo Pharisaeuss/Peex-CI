@@ -70,6 +70,7 @@ jobs:
         status_code=$(curl --silent --location --head --output /dev/null --write-out "%{http_code}" "${{ secrets.SAMPLEWEBAPP_URL }}")
         echo "Status Code: $status_code"
         echo "::set-output name=status_code::$status_code" 
+        echo "{status_code}={$status_code}" >> $GITHUB_OUTPUT
 
     - name: Continue if Healthy
       if: ${{ steps.health_check.outputs.status_code == '200' }}
