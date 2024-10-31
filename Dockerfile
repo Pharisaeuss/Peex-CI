@@ -12,6 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS final-stage
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+ENV ASPNETCORE_URLS=http://0.0.0.0:5000
+EXPOSE 5000
 
-
-ENTRYPOINT [ "dotnet", "SampleWebApp.dll" ]
+ENTRYPOINT [ "dotnet", "SampleWebApp222.dll" ]
