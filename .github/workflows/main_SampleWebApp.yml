@@ -63,3 +63,10 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_11fcc9d0acc74e279f2184136ad674ae }}
         images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ github.sha }}'
+
+    - name: Check the deployed service URL
+      uses: jtalk/url-health-check-action@v4
+      with:
+        url: ${{ secrets.SAMPLEWEBAPP_URL }}
+        max-attempts: 2 
+        retry-delay: 5s 
