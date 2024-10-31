@@ -66,14 +66,13 @@ jobs:
 
     - name: Check the deployed service URL
       id: health_check
-      uses: jtalk/url-health-check-action@v4
-      with:
-        url: ${{ secrets.SAMPLEWEBAPP_URL }}
-        max-attempts: 2
-        retry-delay: 5s 
+      run: |
+        status_code=$(curl --silent --location --head --output /dev/null --write-out "%{http_code}" "${ secrets.SAMPLEWEBAPP_UR }")
+        echo "Status Code: $status_code"
+        echo "::set-output name=status_code::$status_code" 
 
     - name: Continue if Healthy
-      if: ${{ steps.health_check.outcome == 'Success' }}
+      if: ${{ steps.health_check.outputs.status_code == '200' }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
@@ -82,7 +81,7 @@ jobs:
           ${{ secrets.SAMPLEWEBAPP_URL }} is Healthy
 
     - name: Continue if NOT Healthy
-      if: ${{ steps.health_check.outcome != 'Success' }}
+      if: ${{ steps.health_check.outcome != '200' }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
