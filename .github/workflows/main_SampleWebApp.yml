@@ -69,16 +69,14 @@ jobs:
       run: |
         status_code=$(curl --silent --location --head --output /dev/null --write-out "%{http_code}" "${{ secrets.SAMPLEWEBAPP_URL }}")
         echo "Status Code: $status_code"
-        echo "{status_code}={$status_code}" >> $GITHUB_OUTPUT
-        echo "test=$status_code" >> $GITHUB_OUTPUT
+        echo "status_code=$status_code" >> $GITHUB_OUTPUT
 
     - name: test
       run: |
         echo "${{ steps.health_check.outputs.status_code }}" 
-        echo "${{ steps.health_check.outputs.test }}" 
         
     - name: Continue if Healthy
-      if: ${{ steps.health_check.outputs.status_code == 200 }}
+      if: ${{ steps.health_check.outputs.status_code == '200' }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
@@ -87,7 +85,7 @@ jobs:
           ${{ secrets.SAMPLEWEBAPP_URL }} is Healthy
 
     - name: Continue if NOT Healthy
-      if: ${{ steps.health_check.outputs.status_code != 200 }}
+      if: ${{ steps.health_check.outputs.status_code != '200' }}
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
