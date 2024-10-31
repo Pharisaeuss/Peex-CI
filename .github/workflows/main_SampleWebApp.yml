@@ -65,6 +65,7 @@ jobs:
         images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ github.sha }}'
 
     - name: Check the deployed service URL
+      id: health_check
       uses: jtalk/url-health-check-action@v4
       with:
         url: ${{ secrets.SAMPLEWEBAPP_URL }}
