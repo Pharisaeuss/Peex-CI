@@ -32,6 +32,20 @@ jobs:
         push: true
         tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ github.sha }}
         file: ./Dockerfile
+        
+    - name: Manual Trivy Setup
+      uses: aquasecurity/setup-trivy@v0.2.0
+      with:
+        cache: true
+        version: v0.56.1
+        
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+        image-ref: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_fc50d5817d7146b6b05e1383da3f7d2f }}/samplewebapp:${{ github.sha }}'
+        format: 'table'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
 
   deploy:
     runs-on: ubuntu-latest
