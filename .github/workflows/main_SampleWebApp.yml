@@ -96,15 +96,14 @@ jobs:
         message: |
           ${{ secrets.SAMPLEWEBAPP_URL }} is NOT Healthy
           
-    - name: Continue if NOT Healthy
-      if: ${{ steps.health_check.outputs.status_code == '200' }}
+    - name: Delete Imaged if NOT Healthy
       run: |
           DELETE_URL="https://hub.docker.com/v2/repositories/samplewebapp/tags/${{ steps.increment.outputs.value }}/"
           response=$(curl -X DELETE "$DELETE_URL")
       
 
     - name: Rollback to Azure Web App
-      if: ${{ steps.health_check.outputs.status_code != '200' }}
+      if: ${{ steps.health_check.outputs.status_code == '202334330' }}
       id: rolback-to-webapp
       uses: azure/webapps-deploy@v2
       with:
