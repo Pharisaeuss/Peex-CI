@@ -75,7 +75,7 @@ jobs:
     - name: Check the deployed service URL
       id: health_check
       run: |
-        status_code=$(curl --silent --location --head --output /dev/null --write-out "%{http_code}" "${{ secrets.SAMPLEWEBAPP_URL }}")
+        status_code=$(curl --connect-timeout 60 --silent --location --head --output /dev/null --write-out "%{http_code}" "${{ secrets.SAMPLEWEBAPP_URL }}")
         echo "Status Code: $status_code"
         echo "status_code=$status_code" >> $GITHUB_OUTPUT
         
