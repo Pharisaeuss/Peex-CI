@@ -98,8 +98,9 @@ jobs:
           
     - name: Delete Imaged if NOT Healthy
       run: |
-          DELETE_URL="https://hub.docker.com/v1/repositories/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp/tags/${{ steps.increment.outputs.value }}/"
-          response=$(curl -X DELETE -u "${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}:${{ secrets.AzureAppService_ContainerPassword_05a728c05f874fcd9b815cf563b4818b }}" "$DELETE_URL")
+          echo ${{ steps.increment.outputs.value }}
+          DELETE_URL='https://hub.docker.com/v1/repositories/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp/tags/${{ steps.increment.outputs.value }}/'
+          response=$(curl -X DELETE -u '${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}:${{ secrets.AzureAppService_ContainerPassword_05a728c05f874fcd9b815cf563b4818b }}' '$DELETE_URL')
 
     - name: Rollback to Azure Web App
       if: ${{ steps.health_check.outputs.status_code == '202334330' }}
