@@ -97,19 +97,17 @@ jobs:
         message: |
           ${{ secrets.SAMPLEWEBAPP_URL }} is NOT Healthy
           
-    - name: decrement variable
+    - name: decrement variable if NOT Healthy
+      if: ${{ steps.health_check.outputs.status_code != '200' }}
       uses: action-pack/increment@v2
       id: decrement
       with:
         name: 'Build_number'
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         amount: -1
-
-    - name: test
-      run: |
-        echo "${{ steps.decrement.outputs.value }}"
         
     - name: Rollback to Azure Web App
+      if: ${{ steps.health_check.outputs.status_code != '200' }}
       id: rolback-to-webapp
       uses: azure/webapps-deploy@v2
       with:
