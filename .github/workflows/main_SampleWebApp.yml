@@ -98,7 +98,7 @@ jobs:
           
     - name: Delete Imaged if NOT Healthy
       run: |
-          DELETE_URL="https://hub.docker.com/v2/repositories/samplewebapp/tags/${{ steps.increment.outputs.value }}/"
+          DELETE_URL="https://hub.docker.com/v2/repositories/samplewebapp/tags/${ steps.increment.outputs.value }/"
           response=$(curl -X DELETE "$DELETE_URL")
       
 
