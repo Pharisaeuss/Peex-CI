@@ -95,3 +95,20 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
           ${{ secrets.SAMPLEWEBAPP_URL }} is NOT Healthy
+          
+    - name: Continue if NOT Healthy
+      if: ${{ steps.health_check.outputs.status_code == '200' }}
+      run: |
+          DELETE_URL="https://hub.docker.com/v2/repositories/samplewebapp/tags/${{ steps.increment.outputs.value }}/"
+          response=$(curl -X DELETE "$DELETE_URL")
+      
+
+    - name: Rollback to Azure Web App
+      if: ${{ steps.health_check.outputs.status_code != '200' }}
+      id: rolback-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'SampleWebApp'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_11fcc9d0acc74e279f2184136ad674ae }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ steps.increment.outputs.value }}'
