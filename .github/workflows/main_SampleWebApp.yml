@@ -104,10 +104,10 @@ jobs:
       with:
         name: 'Build_number'
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
-        amount: -1
+        amount: -2
         
     - name: Rollback to Azure Web App
-      if: ${{ steps.health_check.outputs.status_code != '200' }}
+      if: ${{ steps.health_check.outputs.status_code != '200sss' }}
       id: rolback-to-webapp
       uses: azure/webapps-deploy@v2
       with:
