@@ -111,8 +111,9 @@ jobs:
           echo "$DELETE_URL"
           echo "https://hub.docker.com/v2/repositories/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp/tags/${{ needs.build.outputs.build_number }}/"
           curl -X DELETE -u "${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}:${{ secrets.DOCKER_TOKEN }}" "$DELETE_URL"
-          docker rmi "${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ needs.build.outputs.build_number }}"
           echo "${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ needs.build.outputs.build_number }}"
+          docker rmi "pharisaeuss/samplewebapp:${{ needs.build.outputs.build_number }}"
+          
 
     - name: Rollback to Azure Web App
       if: ${{ steps.health_check.outputs.status_code == '202334330' }}
