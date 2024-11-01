@@ -12,7 +12,8 @@ on:
 jobs:
   build:
     runs-on: 'ubuntu-latest'
-
+    outputs:
+      build_number: ${{ steps.increment.outputs.value }}
     steps:
     - uses: actions/checkout@v2
 
@@ -69,7 +70,7 @@ jobs:
         app-name: 'SampleWebApp'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_11fcc9d0acc74e279f2184136ad674ae }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ steps.increment.outputs.value }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ needs.build.outputs.build_number }}'
 
     - name: Check the deployed service URL
       id: health_check
@@ -98,8 +99,8 @@ jobs:
           
     - name: Delete Imaged if NOT Healthy
       run: |
-          echo ${{ steps.increment.outputs.value }}
-          DELETE_URL='https://hub.docker.com/v1/repositories/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp/tags/${{ steps.increment.outputs.value }}/'
+          echo ${{ needs.build.outputs.build_number }}
+          DELETE_URL='https://hub.docker.com/v1/repositories/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp/tags/${{ needs.build.outputs.build_number }}/'
           response=$(curl -X DELETE -u '${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}:${{ secrets.AzureAppService_ContainerPassword_05a728c05f874fcd9b815cf563b4818b }}' '$DELETE_URL')
 
     - name: Rollback to Azure Web App
@@ -110,4 +111,4 @@ jobs:
         app-name: 'SampleWebApp'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_11fcc9d0acc74e279f2184136ad674ae }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ steps.increment.outputs.value }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_15c618ff18464f08870f9cb85e65bc80 }}/samplewebapp:${{ needs.build.outputs.build_number }}'
