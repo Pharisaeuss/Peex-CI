@@ -107,7 +107,7 @@ jobs:
         amount: -2
         
     - name: Rollback to Azure Web App
-      if: ${{ steps.health_check.outputs.status_code != '200sss' }}
+      if: ${{ steps.health_check.outputs.status_code != '200' }}
       id: rolback-to-webapp
       uses: azure/webapps-deploy@v2
       with:
